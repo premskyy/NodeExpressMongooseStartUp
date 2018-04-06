@@ -12,8 +12,26 @@ router.get('/', function(req, res, next) {
     res.json(heros)
   })
 });
+router.get('/:id', function (req, res, next) {
+  Hero.findOne({ id: req.params.id }, (err, hero) => {
+    if (err) return res.status(500).send(err);
+    return res.status(200).send(hero);
+  });
+});
 router.post('/', function (req, res, next) {
   const hero = new Hero(req.body);
   hero.save().then(() => res.json({ "name": req.body.name, id: req.body.id}));
+});
+
+router.delete('/:id', function (req, res, next) {
+  console.log(req.params.id);
+  Hero.findByIdAndRemove({_id: req.params.id}, (err, hero) => {
+    if (err) return res.status(500).send(err);
+    const response = {
+      message: "Hero successfully deleted",
+      id: hero.id
+    };
+    return res.status(200).send(response);
+  });
 });
 module.exports = router;
