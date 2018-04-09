@@ -18,6 +18,12 @@ router.get('/:id', function (req, res, next) {
     return res.status(200).send(hero);
   });
 });
+router.put('/', function (req, res, next) {
+  Hero.findOneAndUpdate({ _id: req.body._id }, req.body, { new: true }, function (err, doc) {
+    if (err) return res.send(500, { error: err });
+    return res.json({ status:"succesfully saved" });
+  });
+});
 router.post('/', function (req, res, next) {
   const hero = new Hero(req.body);
   hero.save().then(() => res.json({ "name": req.body.name, id: req.body.id}));
